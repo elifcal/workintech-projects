@@ -1,111 +1,34 @@
-Bu süreç boyunca challenge’lar üzerinde çalışırken hatırlaman gereken git komutlarını hızlıca gözden geçirelim.
+Data Git Project
+Overview
+The goal of this project is to master the fundamental version control workflow using Git. It involves implementing basic Python functions while strictly following a professional development cycle, including status checks, staging, multiple commits, and style enforcement.
 
-## Durum (Status)
+Project Requirements
+The project consists of two primary functions implemented in today.py:
 
-Önce çalışma dizinimizin **clean**: olduğundan emin olalım: 
+my_name_is(): Returns the developer's name.
 
-```bash
-git status
-```
+my_buddy_is(): Returns the names of designated project buddies.
 
-Aşağıdaki sonucu görüyorsan, her şey tamam, bu challenge üzerinde çalışmaya başlayabilirsin:
+Technical Workflow
+1. Version Control Lifecycle
+The project was developed using a step-by-step Git sequence to ensure a clean commit history:
 
-```text
-On branch master
-Your branch is up to date with 'origin/master'.
+Status Monitoring: Frequent use of git status to verify the state of the working directory.
 
-nothing to commit, working tree clean
-```
+Incremental Commits: Each function was committed separately after passing its respective test to demonstrate an organized history.
 
-Bu mesajı görmüyorsan, başlamadan önce repo’yu commit etmen veya temizlemen gerekiyor.
-İlk birkaç gün bir TA’den yardım almak için ticket açmaktan çekinme. git başlangıçta zor olabilir, mutlaka sor!
+Remote Synchronization: Used git pull --rebase and git push to maintain synchronization with the remote repository.
 
-## İlk commit
+2. Testing and Automation
+The project utilizes a Makefile to streamline the testing and linting process.
 
-Bir Python dosyası oluşturalım:
+Unit Testing: Executed via pytest (triggered by make) to validate the return values of the functions.
 
-```bash
-touch today.py
-```
+Diff Analysis: Used git diff to review code changes before finalizing commits.
 
-Bu dosyayı text editoründe aç.
-my_name_is isminde, parametre almayan ve bir str sabiti döndüren bir function yazman gerekiyor.
-Bu sabitin değeri GitHub kullanıcı adın olacak.
+3. Code Quality (Linting)
+To meet professional standards, the code was audited using Pylint.
 
-Bir test geçene kadar make komutunu çalıştır (ikinci testin geçmesine gerek yok, onunla birazdan ilgileneceğiz).
+Docstrings: Comprehensive module-level and function-level docstrings were added to provide clear documentation.
 
-```text
-tests/test_git.py::TestGit::test_hi_my_name_is PASSED
-tests/test_git.py::TestGit::test_my_buddy_is   FAILED
-```
-
-Harika, ilerleme kaydettin. Şimdi durma zamanı—ilerlemeni kaydedelim. Bir nevi checkpoint gibi!
-
-```bash
-git add today.py
-git commit -m "Implement my_name_is function"
-git push origin master
-```
-
-Workintech bu değişikliği fark edecek ve ilerleme durumunu %50 olarak gösterecek. Tebrikler!
-
-## İkinci commit
-
-Şimdi ikinci testi çözmeye başlayalım. Bunun için my_buddy_is isimli, parametre almayan ve bir str sabiti döndüren bir function yazmalısın.
-Bu sabitin değeri buddy’inin GitHub kullanıcı adı olacak (bugün buddy’in yoksa seninkini yazabilirsin :disappointed:).
-
-Dosyada nelerin değiştiğini görmek için şu komutu kullanabilirsin:
-
-```bash
-git diff
-```
-
-Her şey yolundaysa commit edip GitHub’a push edebilirsin:
-
-```bash
-git add today.py
-git commit -m "Implement my_buddy_is function"
-git push origin master
-```
-
-## Making `pylint` happy (`pylint` 'i mutlu yapmak)
-
-Bu noktada, 3 tane style hatası görmen gerekir:
-
-```text
-C0114: Missing module docstring (missing-module-docstring)
-C0116: Missing function or method docstring (missing-function-docstring)
-C0116: Missing function or method docstring (missing-function-docstring)
-```
-
-Şu anda docstring eksik. Bir tane module için, bir tane de her function için gerekiyor.
-Docstring, bir module veya function hakkında kısa açıklama sağlar.
-
-İlk hatayı düzeltmek için today.py dosyasının ilk satırına bir docstring ekle:
-
-```python
-"""A module computing buddy pair names for the day"""
-```
-
-Tekrar make çalıştır; bir style hatasının kaybolması gerekiyor.
-
-
-Aynı işlemi iki function için de yap: tek satırlık docstring ekle.
-
-
-Bittiğinde, challenge’ın üçüncü commit’ini yapma zamanı:
-
-```bash
-git diff
-```
-
-```bash
-git add today.py
-git commit -m "Fix style issues, should get a 'Good Style' now :pray:"
-git push origin master
-```
-
-## Conclusion (Sonuç)
-
-Artık Workintech’te nasıl gezineceğini, bir challenge’a nasıl konumlanacağını, onu bir text editor ile açıp üzerinde çalışmayı, ardından terminalde make ve bazı git komutlarını çalıştırmayı biliyorsun.
-Tebrikler!
+PEP 8 Compliance: Ensured correct indentation (4 spaces) and naming conventions to achieve a perfect 10/10 Pylint score.
