@@ -1,38 +1,30 @@
-Bir Python script’inin davranışını değiştirmenin (komut satırı argümanları dışında) başka bir yolu da environment variable kullanmaktır.
+# Environment Variables in Python
 
-## Alıştırma
+This project demonstrates how to use environment variables in Python programs and how to dynamically manage the flow of the code using external inputs.
 
-`flask_option.py`  dosyasını aç ve `start` function’ını implement et. Bu function, `FLASK_ENV` environment variable’ının varlığına ve değerine göre bir `String` döndürmelidir.
+## Concepts Learned
+- Using Python's built-in os module and the os.getenv() function.
+- The logic of configuring a program externally based on the working environment (development or production) instead of hardcoding values.
+- Setting default (fallback) behaviors to prevent errors when an environment variable is not defined (empty mode).
 
-<details>
-  <summary markdown='span'>💡 <code>FLASK_ENV</code>?</summary>
+## Project Content
+The flask_option.py file in this project contains a start() function that checks for an environment variable named FLASK_ENV. The program returns a different startup message depending on the terminal command used to run it.
 
-Flask, Python tabanlı bir web application framework’tür. (Evet, Python ile web uygulamaları da geliştirebilirsin.)
+## How to Run
 
-  Flask geliştiricileri, uygulamayı development ve production ortamlarında farklı şekilde yapılandırmak için `FLASK_ENV` environment variable’ını ayarlar.
-Örneğin development modunda daha detaylı hata mesajları göstermek için.
+You can test the program by defining different environment variables via the terminal as follows:
 
-Bu örnekte, `FLASK_ENV` değişkeninin değerine göre farklı bir mesaj yazdırarak bunu taklit ediyoruz.
-
-</details>
-
-
-Bir environment variable’ı tüm ortam için ayarlayabilir veya sadece çalıştıracağın komut için ayarlayabilirsin.
-Bunu, komutun önüne `YOUR_ENV_VAR=some_value` yazarak yapabilirsin. Aşağıdaki örneklerde olduğu gibi:
-
-
-Beklenen davranış şöyle:
-
-
+1. To run in development mode:
 ```bash
 FLASK_ENV=development python flask_option.py
-# => "Starting in development mode..."
-
-FLASK_ENV=production python flask_option.py
-# => "Starting in production mode..."
-
-python flask_option.py
-# => "Starting in empty mode..."
 ```
- 
-💡 **İpucu**: os modülündeki os.getenv fonksiyonuna bir göz at.
+
+2. To run in production mode:
+```bash
+FLASK_ENV=production python flask_option.py
+```
+
+3. To run without specifying any variable (Empty mode):
+```bash
+python flask_option.py
+```
