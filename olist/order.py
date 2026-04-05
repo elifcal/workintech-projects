@@ -82,7 +82,38 @@ class Order:
         Returns a DataFrame with:
         order_id, distance_seller_customer
         """
-        pass  # YOUR CODE HERE
+
+        data = self.data
+        orders = data['orders']
+        order_items = data['order_items']
+        sellers = data['sellers']
+        customers = data['customers']
+
+        geo = data['geolocation']
+        geo = geo.groupby('geolocation_zip_code_prefix', as_index=False).first()
+
+        df = order_items.merge(sellers, on='seller_id')\
+                        .merge(orders, on='order_id')\
+                        .merge(customers, on='customer_id')
+
+        df = df.merge(geo[['geolocation_zip_code_prefix', 'geolocation_lat', 'geolocation_lng']],
+                      left_on='customer_zip_code_prefix',
+                      right_on='geolocation_zip_code_prefix')
+
+        df = df.merge(geo[['geolocation_zip_code_prefix', 'geolocation_lat', 'geolocation_lng']],
+                      left_on='seller_zip_code_prefix',
+                      right_on='geolocation_zip_code_prefix',
+                      suffixes=('_customer', '_seller'))
+
+        df['distance_seller_customer'] = df.apply(
+            lambda row: haversine_distance(
+                row['geolocation_lng_seller'],
+                row['geolocation_lat_seller'],
+                row['geolocation_lng_customer'],
+                row['geolocation_lat_customer']
+            ), axis=1)
+
+        return df.groupby('order_id', as_index=False)['distance_seller_customer'].mean()
 
     def get_training_data(self,
                           is_delivered=True,

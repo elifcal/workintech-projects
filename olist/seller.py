@@ -141,32 +141,40 @@ class Seller:
         Returns a DataFrame with:
         'seller_id', 'share_of_five_stars', 'share_of_one_stars', 'review_score'
         """
+        reviews = self.data['order_reviews'].copy()
+        items = self.data['order_items'].copy()
 
-        pass  # YOUR CODE HERE
+        reviews_with_items = reviews.merge(items, on='order_id')
+
+        reviews_with_items = reviews_with_items.drop_duplicates(subset=['order_id', 'seller_id'])
+
+        cost_dict = {1: 100, 2: 50, 3: 40, 4: 0, 5: 0}
+        reviews_with_items['cost_of_reviews'] = reviews_with_items['review_score'].map(cost_dict)
+
+        df = reviews_with_items.groupby('seller_id')[['cost_of_reviews']].sum().reset_index()
+
+        return df
 
     def get_training_data(self):
-        """
-        Returns a DataFrame with:
-        ['seller_id', 'seller_city', 'seller_state', 'delay_to_carrier',
-        'wait_time', 'date_first_sale', 'date_last_sale', 'months_on_olist', 'share_of_one_stars',
-        'share_of_five_stars', 'review_score', 'n_orders', 'quantity',
-        'quantity_per_order', 'sales']
-        """
+        # 1. Mevcut tüm özellikleri birleştiriyoruz
+        training_set = (
+            self.get_seller_features()
+                .merge(self.get_seller_delay_wait_time(), on='seller_id')
+                .merge(self.get_active_dates(), on='seller_id')
+                .merge(self.get_quantity(), on='seller_id')
+                .merge(self.get_sales(), on='seller_id')
+        )
 
-        training_set =\
-            self.get_seller_features()\
-                .merge(
-                self.get_seller_delay_wait_time(), on='seller_id'
-               ).merge(
-                self.get_active_dates(), on='seller_id'
-               ).merge(
-                self.get_quantity(), on='seller_id'
-               ).merge(
-                self.get_sales(), on='seller_id'
-               )
-
+        # 2. Review skorlarını ve maliyetlerini ekliyoruz
         if self.get_review_score() is not None:
-            training_set = training_set.merge(self.get_review_score(),
-                                              on='seller_id')
+            training_set = training_set.merge(self.get_review_score(), on='seller_id')
+
+        # 3. GELİR HESAPLAMA (Eksik olan parça buydu!)
+        # Revenues = (Aylık Sabit Ücret * Ay Sayısı) + (%10 Komisyon * Toplam Satış)
+        training_set['revenues'] = (training_set['months_on_olist'] * 80) + (training_set['sales'] * 0.1)
+
+        # 4. KÂR HESAPLAMA
+        # Profit = Gelirler - İnceleme Maliyetleri
+        training_set['profits'] = training_set['revenues'] - training_set['cost_of_reviews']
 
         return training_set
