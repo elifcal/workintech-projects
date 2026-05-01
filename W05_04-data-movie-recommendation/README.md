@@ -1,0 +1,1 @@
+Bu alıştırmaya başlamak için, bu alıştırma klasöründeki **IPython Notebook dosyasını** `jupyter notebook` komutu ile açın.
